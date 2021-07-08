@@ -61,7 +61,12 @@ class _MyHomePageState extends State<MyHomePage> {
               studentNo.text +
               '&_password=' +
               password.text),
-          headers: headers);
+          headers: {
+            "Access-Control-Allow-Origin":
+                "https://jovial-austin-50aa62.netlify.app",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Methods": "*"
+          });
 
       if (response.statusCode == 201) {
         print(response.body);
