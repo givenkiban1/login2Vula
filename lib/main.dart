@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   Map<String, String> headers = {
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin": "https://jovial-austin-50aa62.netlify.app",
     "Access-Control-Allow-Headers": "*",
     "Access-Control-Allow-Methods": "*"
   };
