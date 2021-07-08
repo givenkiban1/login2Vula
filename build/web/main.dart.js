@@ -54653,7 +54653,7 @@ F.AO.prototype={
 W:function(a,b){return new S.rp(new F.rE("Flutter Demo Home Page",null),"Flutter Demo",X.ab5(null,C.jq),null)}}
 F.rE.prototype={
 aO:function(){var s,r=t.N
-r=P.ao(["Access-Control-Allow-Origin","*","Access-Control-Allow-Headers","*","Access-Control-Allow-Methods","*"],r,r)
+r=P.ao(["Access-Control-Allow-Origin","https://jovial-austin-50aa62.netlify.app","Access-Control-Allow-Headers","*","Access-Control-Allow-Methods","*"],r,r)
 s=t.V
 return new F.vS(r,new D.um(C.kz,new P.b4(s)),new D.um(C.kz,new P.b4(s)),C.m)}}
 F.vS.prototype={
