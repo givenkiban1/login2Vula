@@ -34,19 +34,18 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   Map<String, String> headers = {
-    "Set-Cookie": "HttpOnly;SameSite=lax;Secure; Path=/",
-    "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-    "Access-Control-Allow-Headers": "Origin,Content-Type,Set-Cookie",
-    "Access-Control-Allow-Methods": "GET,POST"
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "*",
+    "Access-Control-Allow-Methods": "*"
   };
 
   void updateCookie(http.Response response) {
     print("Response headers: ${response.headers}");
-    String rawCookie = response.headers['set-cookie'].toString();
+    String rawCookie = response.headers['Set-Cookie'].toString();
     if (rawCookie != null) {
       int index = rawCookie.indexOf(';');
-      headers['cookie'] = rawCookie;
-//      (index == -1) ? rawCookie : rawCookie.substring(0, index);
+      headers['cookie'] =
+          (index == -1) ? rawCookie : rawCookie.substring(0, index);
     }
     print("Cookie is : ${headers['cookie']}");
   }
@@ -57,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var client = http.Client();
 
     try {
-      var response = await client.post(
+      var response = await http.post(
           Uri.parse('https://vula.uct.ac.za/direct/session?_username=' +
               studentNo.text +
               '&_password=' +
@@ -72,9 +71,11 @@ class _MyHomePageState extends State<MyHomePage> {
         //   cookieVal = response.headers.toString();
         // });
 
-        var response2 = await client.get(
+        updateCookie(response);
+
+        var response2 = await http.get(
             Uri.parse('https://vula.uct.ac.za/direct/session'),
-            headers: response.headers);
+            headers: headers);
 
         if (response2.statusCode == 200) {
           print(response2.body);
