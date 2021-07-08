@@ -56,32 +56,38 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter() async {
     var client = http.Client();
 
-    var response = await client.post(Uri.parse(
-        'https://vula.uct.ac.za/direct/session?_username=' +
-            studentNo.text +
-            '&_password=' +
-            password.text));
+    try {
+      var response = await client.post(
+          Uri.parse('https://vula.uct.ac.za/direct/session?_username=' +
+              studentNo.text +
+              '&_password=' +
+              password.text),
+          headers: headers);
 
-    if (response.statusCode == 201) {
-      print(response.body);
-      print("Headers are : ${response.headers}");
+      if (response.statusCode == 201) {
+        print(response.body);
+        print("Headers are : ${response.headers}");
 
-      // setState(() {
-      //   cookieVal = response.headers.toString();
-      // });
+        // setState(() {
+        //   cookieVal = response.headers.toString();
+        // });
 
-      var response2 = await client.get(
-          Uri.parse('https://vula.uct.ac.za/direct/session'),
-          headers: response.headers);
+        var response2 = await client.get(
+            Uri.parse('https://vula.uct.ac.za/direct/session'),
+            headers: response.headers);
 
-      if (response2.statusCode == 200) {
-        print(response2.body);
-        print("Headers are : ${response2.headers}");
+        if (response2.statusCode == 200) {
+          print(response2.body);
+          print("Headers are : ${response2.headers}");
+        } else {
+          print(response2.reasonPhrase);
+        }
       } else {
-        print(response2.reasonPhrase);
+        print(response.reasonPhrase);
       }
-    } else {
-      print(response.reasonPhrase);
+    } catch (e) {
+      print("An error has occured bof");
+      print(e);
     }
   }
 
