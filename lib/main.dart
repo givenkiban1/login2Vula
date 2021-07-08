@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var client = http.Client();
 
     try {
-      var response = await http.post(
+      var response = await client.post(
           Uri.parse('https://vula.uct.ac.za/direct/session?_username=' +
               studentNo.text +
               '&_password=' +
@@ -67,13 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
         print(response.body);
         print("Headers are : ${response.headers}");
 
-        // setState(() {
-        //   cookieVal = response.headers.toString();
-        // });
-
         updateCookie(response);
 
-        var response2 = await http.get(
+        var response2 = await client.get(
             Uri.parse('https://vula.uct.ac.za/direct/session'),
             headers: headers);
 
