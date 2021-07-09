@@ -242,6 +242,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (form.validate()) {
                         setState(() {
                           isLoading = true;
+                          showStudentNo = false;
+                          _studentNo = "";
                         });
                         _incrementCounter();
                       }
