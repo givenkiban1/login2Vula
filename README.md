@@ -1,6 +1,6 @@
-# flutter_application_1
+# Login to Vula
 
-A new Flutter project.
+This is an **interface** that allows **UCT students** to login on **vula** and it returns their full name if credentials are correct. This project is built with flutter.
 
 ## Getting Started
 
@@ -23,4 +23,4 @@ samples, guidance on mobile development, and a full API reference.
 - lastly, run the app on your browser(chrome) by using the command: flutter run -d chrome
 
 
-This is an **interface** that allows **UCT students** to login on **vula** and it returns their full name if credentials are correct.
+
