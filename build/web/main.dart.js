@@ -54688,7 +54688,7 @@ var $async$q_=P.a1(function(a,b){if(a===1){p=b
 s=q}while(true)switch(s){case 0:q=3
 k=t.N
 s=6
-return P.a7(G.apB(P.uK("https://vula.uct.ac.za/direct/session?_username="+n.e.a.a+"&_password="+n.f.a.a),P.ap(["Access-Control-Allow-Origin","https://jovial-austin-50aa62.netlify.app","Access-Control-Allow-Headers","*","Access-Control-Allow-Methods","POST"],k,k)),$async$q_)
+return P.a7(G.apB(P.uK("https://boiling-crag-24371.herokuapp.com/https://vula.uct.ac.za/direct/session?_username="+n.e.a.a+"&_password="+n.f.a.a),P.ap(["Access-Control-Allow-Origin","*","Access-Control-Allow-Headers","*","Access-Control-Allow-Methods","*"],k,k)),$async$q_)
 case 6:m=b
 if(m.b===201){k=m
 P.iK(B.ap1(U.anf(k.e).c.a.h(0,"charset")).d4(0,k.x))

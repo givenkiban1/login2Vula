@@ -38,15 +38,15 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter() async {
     try {
       var response = await http.post(
-          Uri.parse('https://vula.uct.ac.za/direct/session?_username=' +
-              studentNo.text +
-              '&_password=' +
-              password.text),
+          Uri.parse(
+              'https://boiling-crag-24371.herokuapp.com/https://vula.uct.ac.za/direct/session?_username=' +
+                  studentNo.text +
+                  '&_password=' +
+                  password.text),
           headers: {
-            "Access-Control-Allow-Origin":
-                "https://jovial-austin-50aa62.netlify.app",
+            "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Headers": "*",
-            "Access-Control-Allow-Methods": "POST"
+            "Access-Control-Allow-Methods": "*",
           });
 
       if (response.statusCode == 201) {
