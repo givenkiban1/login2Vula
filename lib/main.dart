@@ -44,7 +44,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void updateCookie(http.Response response) {
     print("Response headers: ${response.headers}");
     print(response.headers['given'].toString());
-    print(response.headers['Given'].toString());
 
     String rawCookie = response.headers['given'].toString();
     if (rawCookie != null) {
@@ -73,6 +72,18 @@ class _MyHomePageState extends State<MyHomePage> {
         print(response.body);
         print("Headers are : ${response.headers}");
         updateCookie(response);
+
+        var response2 = await http.get(
+            Uri.parse(
+                'https://cors-with-cookies.herokuapp.com/https://vula.uct.ac.za/direct/session'),
+            headers: headers);
+
+        if (response2.statusCode == 200) {
+          print(response2.body);
+          print("Headers are : ${response2.headers}");
+        } else {
+          print(response2.reasonPhrase);
+        }
       }
     } catch (e) {
       print("An error has occured bof");
