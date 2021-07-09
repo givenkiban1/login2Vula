@@ -12,11 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Vula Login Demo',
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Vula Login Demo'),
     );
   }
 }
@@ -32,14 +32,25 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
   final studentNo = TextEditingController(), password = TextEditingController();
+  bool? _passwordVisible, showStudentNo;
+  String? _studentNo;
 
   Map<String, String> headers = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "*",
     "Access-Control-Allow-Methods": "*"
   };
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _passwordVisible = false;
+      _studentNo = "";
+      showStudentNo = false;
+    });
+  }
 
   void updateCookie(http.Response response) {
     print("Response headers: ${response.headers}");
@@ -82,8 +93,15 @@ class _MyHomePageState extends State<MyHomePage> {
             headers: headers);
 
         if (response2.statusCode == 200) {
-          print(jsonDecode(response2.body));
+          setState(() {
+            _studentNo = jsonDecode(response2.body)["displayName"];
+            showStudentNo = true;
+          });
         } else {
+          setState(() {
+            _studentNo = "";
+            showStudentNo = false;
+          });
           print(response2.statusCode);
           print(response2.reasonPhrase);
         }
@@ -105,27 +123,74 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-              child: TextField(
+              child: TextFormField(
                 controller: studentNo,
+                decoration: InputDecoration(
+                  labelText: 'Student No.',
+                  hintText: 'Enter your UCT Student number',
+                ),
               ),
-              width: 200,
-              height: 50,
+              padding: EdgeInsets.symmetric(vertical: 20),
+              width: 300,
+              height: 100,
             ),
             Container(
-              child: TextField(
+              child: TextFormField(
+                keyboardType: TextInputType.text,
                 controller: password,
+                obscureText:
+                    !_passwordVisible!, //This will obscure text dynamically
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  hintText: 'Enter your password',
+                  // Here is key idea
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      // Based on passwordVisible state choose the icon
+                      _passwordVisible!
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Theme.of(context).primaryColorDark,
+                    ),
+                    onPressed: () {
+                      // Update the state i.e. toogle the state of passwordVisible variable
+                      setState(() {
+                        _passwordVisible = !_passwordVisible!;
+                      });
+                    },
+                  ),
+                ),
               ),
-              width: 200,
-              height: 50,
+              padding: EdgeInsets.symmetric(vertical: 20),
+              width: 300,
+              height: 100,
             ),
+            Container(
+              width: 200,
+              height: 60,
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: TextButton(
+                  onPressed: _incrementCounter,
+                  child: Text(
+                    "Sign in",
+                    style: TextStyle(color: Colors.white),
+                  )),
+              decoration: BoxDecoration(color: Colors.green),
+            ),
+            if (showStudentNo!)
+              Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                padding: EdgeInsets.symmetric(vertical: 30),
+                height: 130,
+                child: Text(
+                  _studentNo!.isNotEmpty ? _studentNo.toString() : "Error",
+                  style: TextStyle(fontFamily: "Tahoma", fontSize: 30),
+                  textAlign: TextAlign.center,
+                ),
+              )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
