@@ -35,11 +35,28 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final studentNo = TextEditingController(), password = TextEditingController();
 
+  Map<String, String> headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "*",
+    "Access-Control-Allow-Methods": "*"
+  };
+
+  void updateCookie(http.Response response) {
+    print("Response headers: ${response.headers}");
+    String rawCookie = response.headers['Set-Cookie'].toString();
+    if (rawCookie != null) {
+      int index = rawCookie.indexOf(';');
+      headers['cookie'] =
+          (index == -1) ? rawCookie : rawCookie.substring(0, index);
+    }
+    print("Cookie is : ${headers['cookie']}");
+  }
+
   void _incrementCounter() async {
     try {
       var response = await http.post(
           Uri.parse(
-              'https://boiling-crag-24371.herokuapp.com/https://vula.uct.ac.za/direct/session?_username=' +
+              'https://cors-with-cookies.herokuapp.com/https://vula.uct.ac.za/direct/session?_username=' +
                   studentNo.text +
                   '&_password=' +
                   password.text),
@@ -52,6 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (response.statusCode == 201) {
         print(response.body);
         print("Headers are : ${response.headers}");
+        updateCookie(response);
       }
     } catch (e) {
       print("An error has occured bof");
