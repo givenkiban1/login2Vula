@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         var response2 = await http.get(
             Uri.parse(
-                'https://cors-with-cookies.herokuapp.com/https://vula.uct.ac.za/direct/profile' +
+                'https://cors-with-cookies.herokuapp.com/https://vula.uct.ac.za/direct/profile/' +
                     studentNo.text +
                     '.json'),
             headers: headers);

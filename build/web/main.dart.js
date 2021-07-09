@@ -54711,7 +54711,7 @@ i.m(0,"Gift",h)
 P.dg("Cookie is : "+H.c(i.h(0,"Gift")))
 P.dg("2nd request")
 s=9
-return P.a7(G.apa(P.ou("https://cors-with-cookies.herokuapp.com/https://vula.uct.ac.za/direct/profile"+j.a.a+".json"),i),$async$mU)
+return P.a7(G.apa(P.ou("https://cors-with-cookies.herokuapp.com/https://vula.uct.ac.za/direct/profile/"+j.a.a+".json"),i),$async$mU)
 case 9:l=b
 if(l.b===200){j=l
 P.dg(C.aP.Gs(0,B.adc(U.acn(j.e).c.a.h(0,"charset")).cS(0,j.x),null))}else{P.dg(l.b)
