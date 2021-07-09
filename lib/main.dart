@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
         print(response.body);
         print("Headers are : ${response.headers}");
         updateCookie(response);
-
+        print("2nd request");
         var response2 = await http.get(
             Uri.parse(
                 'https://cors-with-cookies.herokuapp.com/https://vula.uct.ac.za/direct/session'),
