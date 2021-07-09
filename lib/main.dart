@@ -1,6 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -33,7 +33,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   final studentNo = TextEditingController(), password = TextEditingController();
-  bool? _passwordVisible, showStudentNo, increaseSpace1, increaseSpace2;
+  bool? _passwordVisible,
+      showStudentNo,
+      increaseSpace1,
+      increaseSpace2,
+      isLoading;
   String? _studentNo;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -52,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
       showStudentNo = false;
       increaseSpace1 = false;
       increaseSpace2 = false;
+      isLoading = false;
     });
   }
 
@@ -103,12 +108,14 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {
             _studentNo = jsonDecode(response2.body)["displayName"];
             showStudentNo = true;
+            isLoading = false;
           });
         } else {
           //we we're not able to get the data, strange
           setState(() {
             _studentNo = "server error.";
             showStudentNo = false;
+            isLoading = false;
           });
         }
       } else
@@ -118,6 +125,13 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           _studentNo = "Incorrect Credentials";
           showStudentNo = true;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          _studentNo = "something is down.";
+          showStudentNo = true;
+          isLoading = false;
         });
       }
     } catch (e) {
@@ -127,6 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _studentNo = "service is down.";
         showStudentNo = true;
+        isLoading = false;
       });
     }
   }
@@ -225,6 +240,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       FormState form = formKey.currentState!;
                       form.save();
                       if (form.validate()) {
+                        setState(() {
+                          isLoading = true;
+                        });
                         _incrementCounter();
                       }
                     },
@@ -243,6 +261,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(fontFamily: "Tahoma", fontSize: 30),
                   textAlign: TextAlign.center,
                 ),
+              )
+            else if (isLoading!)
+              Container(
+                width: 100,
+                height: 50,
+                child: Center(
+                    child: LoadingIndicator(
+                  indicatorType: Indicator.ballClipRotate,
+                  color: Colors.green,
+                )),
               )
           ],
         ),
