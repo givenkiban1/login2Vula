@@ -17,10 +17,10 @@ samples, guidance on mobile development, and a full API reference.
 
 ## To run this project on your pc
 
-open your command terminal, type : clone https://github.com/givenkiban1/login2Vula.git
-then, type : cd login2Vula
-next, install the packages required by this project by typing : flutter pub get
-lastly, run the app on your browser(chrome) by using the command: flutter run -d chrome
+- open your command terminal, type : clone https://github.com/givenkiban1/login2Vula.git
+- then, type : cd login2Vula
+- next, install the packages required by this project by typing : flutter pub get
+- lastly, run the app on your browser(chrome) by using the command: flutter run -d chrome
 
 
 This is an **interface** that allows **UCT students** to vula and it returns their full name if credentials are correct.
