@@ -1,4 +1,4 @@
-# Login to Vula
+# Login2Vula
 
 This is an **interface** that allows **UCT students** to login on **vula** and it returns their full name if credentials are correct. This project is built with flutter.
 
