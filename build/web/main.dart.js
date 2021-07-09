@@ -54696,7 +54696,7 @@ P.fy(B.ap1(U.anf(k.e).c.a.h(0,"charset")).d4(0,k.x))
 P.fy("Headers are : "+m.e.i(0))
 k=m.e
 P.fy("Response headers: "+k.i(0))
-j=J.cR(k.h(0,"Set-Cookie"))
+j=J.cR(k.h(0,"given"))
 i=C.b.dB(j,";")
 k=n.r
 k.m(0,"cookie",i===-1?j:C.b.G(j,0,i))
