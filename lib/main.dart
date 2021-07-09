@@ -48,10 +48,10 @@ class _MyHomePageState extends State<MyHomePage> {
     String rawCookie = response.headers['given'].toString();
     if (rawCookie != null) {
       int index = rawCookie.indexOf(';');
-      headers['cookie'] =
-          (index == -1) ? rawCookie : rawCookie.substring(0, index);
+      headers['Gift'] = rawCookie;
+      //(index == -1) ? rawCookie : rawCookie.substring(0, index);
     }
-    print("Cookie is : ${headers['cookie']}");
+    print("Cookie is : ${headers['Gift']}");
   }
 
   void _incrementCounter() async {
@@ -73,15 +73,18 @@ class _MyHomePageState extends State<MyHomePage> {
         print("Headers are : ${response.headers}");
         updateCookie(response);
         print("2nd request");
+
         var response2 = await http.get(
             Uri.parse(
-                'https://cors-with-cookies.herokuapp.com/https://vula.uct.ac.za/direct/session'),
+                'https://cors-with-cookies.herokuapp.com/https://vula.uct.ac.za/direct/profile' +
+                    studentNo.text +
+                    '.json'),
             headers: headers);
 
         if (response2.statusCode == 200) {
-          print(response2.body);
-          print("Headers are : ${response2.headers}");
+          print(jsonDecode(response2.body));
         } else {
+          print(response2.statusCode);
           print(response2.reasonPhrase);
         }
       }
