@@ -43,6 +43,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void updateCookie(http.Response response) {
     print("Response headers: ${response.headers}");
+    print(response.headers['given'].toString());
+    print(response.headers['Given'].toString());
+
     String rawCookie = response.headers['given'].toString();
     if (rawCookie != null) {
       int index = rawCookie.indexOf(';');
