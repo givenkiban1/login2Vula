@@ -33,8 +33,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   final studentNo = TextEditingController(), password = TextEditingController();
-  bool? _passwordVisible, showStudentNo;
+  bool? _passwordVisible, showStudentNo, increaseSpace1, increaseSpace2;
   String? _studentNo;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Map<String, String> headers = {
     "Access-Control-Allow-Origin": "*",
@@ -49,24 +50,28 @@ class _MyHomePageState extends State<MyHomePage> {
       _passwordVisible = false;
       _studentNo = "";
       showStudentNo = false;
+      increaseSpace1 = false;
+      increaseSpace2 = false;
     });
   }
 
-  void updateCookie(http.Response response) {
-    print("Response headers: ${response.headers}");
-    print(response.headers['given'].toString());
+  //this function receives an http response and takes the cookie variable, given
+  //and stores it as gift in headers map variable above
 
+  void updateCookie(http.Response response) {
     String rawCookie = response.headers['given'].toString();
     if (rawCookie != null) {
       int index = rawCookie.indexOf(';');
       headers['Gift'] = rawCookie;
-      //(index == -1) ? rawCookie : rawCookie.substring(0, index);
     }
-    print("Cookie is : ${headers['Gift']}");
   }
 
+  //this is the function that is called when a user clicks- login
   void _incrementCounter() async {
+    //try catch is used to catch any unexpected errors, such as cors, or anything else we don't anticipate.
     try {
+      //the first request that is made is a post request, to attempt a login to vula
+      //using the credentials user has entered via textinputs
       var response = await http.post(
           Uri.parse(
               'https://cors-with-cookies.herokuapp.com/https://vula.uct.ac.za/direct/session?_username=' +
@@ -79,12 +84,12 @@ class _MyHomePageState extends State<MyHomePage> {
             "Access-Control-Allow-Methods": "*",
           });
 
+      //if the response code==201, this means login is successful
       if (response.statusCode == 201) {
-        print(response.body);
-        print("Headers are : ${response.headers}");
+        //update cookie is called
         updateCookie(response);
-        print("2nd request");
 
+        //the 2nd http request is called, to get profile information of the user who's just signed in
         var response2 = await http.get(
             Uri.parse(
                 'https://cors-with-cookies.herokuapp.com/https://vula.uct.ac.za/direct/profile/' +
@@ -92,23 +97,37 @@ class _MyHomePageState extends State<MyHomePage> {
                     '.json'),
             headers: headers);
 
+        //if the response code==200, this means the request was successful and the data we asked for is returned
         if (response2.statusCode == 200) {
+          //we update the state variables with the display name of signed in user
           setState(() {
             _studentNo = jsonDecode(response2.body)["displayName"];
             showStudentNo = true;
           });
         } else {
+          //we we're not able to get the data, strange
           setState(() {
-            _studentNo = "";
+            _studentNo = "server error.";
             showStudentNo = false;
           });
-          print(response2.statusCode);
-          print(response2.reasonPhrase);
         }
+      } else
+      //when response code==403 or 401, this either means forbidden or unauthorized. this could either be
+      //that credentials are wrong, or we're trying to access data we don't have access to
+      if (response.statusCode == 403 || response.statusCode == 401) {
+        setState(() {
+          _studentNo = "Incorrect Credentials";
+          showStudentNo = true;
+        });
       }
     } catch (e) {
-      print("An error has occured bof");
-      print(e);
+      //our response to unexpected error caught
+//      print("An error has occured bof");
+      //print(e);
+      setState(() {
+        _studentNo = "service is down.";
+        showStudentNo = true;
+      });
     }
   }
 
@@ -122,60 +141,97 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              child: TextFormField(
-                controller: studentNo,
-                decoration: InputDecoration(
-                  labelText: 'Student No.',
-                  hintText: 'Enter your UCT Student number',
-                ),
-              ),
-              padding: EdgeInsets.symmetric(vertical: 20),
-              width: 300,
-              height: 100,
-            ),
-            Container(
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-                controller: password,
-                obscureText:
-                    !_passwordVisible!, //This will obscure text dynamically
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
-                  // Here is key idea
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      // Based on passwordVisible state choose the icon
-                      _passwordVisible!
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Theme.of(context).primaryColorDark,
+            Form(
+              key: formKey,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    child: TextFormField(
+                      controller: studentNo,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          setState(() {
+                            increaseSpace1 = true;
+                          });
+                          return "Student no. is required.";
+                        } else {
+                          setState(() {
+                            increaseSpace1 = false;
+                          });
+                        }
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Student No.',
+                        hintText: 'Enter your UCT Student number',
+                      ),
                     ),
-                    onPressed: () {
-                      // Update the state i.e. toogle the state of passwordVisible variable
-                      setState(() {
-                        _passwordVisible = !_passwordVisible!;
-                      });
-                    },
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    width: 300,
+                    height: increaseSpace1! ? 150 : 100,
                   ),
-                ),
+                  Container(
+                    child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller: password,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          setState(() {
+                            increaseSpace2 = true;
+                          });
+                          return "Password is required.";
+                        } else {
+                          setState(() {
+                            increaseSpace2 = false;
+                          });
+                        }
+                      },
+                      obscureText:
+                          !_passwordVisible!, //This will obscure text dynamically
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Enter your password',
+                        // Here is key idea
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            // Based on passwordVisible state choose the icon
+                            _passwordVisible!
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Theme.of(context).primaryColorDark,
+                          ),
+                          onPressed: () {
+                            // Update the state i.e. toogle the state of passwordVisible variable
+                            setState(() {
+                              _passwordVisible = !_passwordVisible!;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    width: 300,
+                    height: increaseSpace2! ? 150 : 100,
+                  ),
+                ],
               ),
-              padding: EdgeInsets.symmetric(vertical: 20),
-              width: 300,
-              height: 100,
             ),
-            Container(
-              width: 200,
-              height: 60,
+            Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
-              child: TextButton(
-                  onPressed: _incrementCounter,
-                  child: Text(
-                    "Sign in",
-                    style: TextStyle(color: Colors.white),
-                  )),
-              decoration: BoxDecoration(color: Colors.green),
+              child: Container(
+                width: 200,
+                height: 60,
+                child: TextButton(
+                    onPressed: () {
+                      FormState form = formKey.currentState!;
+                      form.save();
+                      if (form.validate()) {
+                        _incrementCounter();
+                      }
+                    },
+                    child: Text("Sign in",
+                        style: TextStyle(color: Colors.white, fontSize: 20))),
+                decoration: BoxDecoration(color: Colors.green),
+              ),
             ),
             if (showStudentNo!)
               Container(
